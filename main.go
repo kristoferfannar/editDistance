@@ -123,21 +123,28 @@ func main() {
 	// fmt.Printf("EditDistance(%s, %s) = %d\n", word1, word2, EditDistance(word1, word2))
 
 	// // provided by https://www.bioinformatics.org/sms2/random_dna.html
-	// dna1000_1 := "ggtggttggtcagaaccgtcccgtatgttcataactaggcactagtaccggggccaggacgggagtgcaatagcaagcccttatcaaaaccgtcgcgctaaccacgcaaagatacggtatcacatatgccaagaattggggatgggtattagaatgacctaggtcaacactccttgttagagcgagtggcgtgtgacgtaccacgtcgtacttaactagatcgcttaaagccccgatgtggccacttggaggattcaaaggccctaatgatcctcacacgctaccgaggttgacggcgcttcttgaaaacacaaatttcttggtgacatacgcctacgactcattgtcgtacttttcgtctatcaccaagcgaaacctcccccacttaaccatctatgcgaattgttattcggcaccgccaccgtggaaacccgtcataaaaggaccatgccaaattggtttcatcgacaaagtccattaagttcgatataaacttatttgcagctcgcaagataaaaggctatgtccatgccatgttcggcgcacctctcctcgcgctgtaggacgcaacgttcgttcataatcgagtagtcctgctgcactgatggagccatccattgcagcgtcagcgcttcgactccggcccgctcatcgctagttagctatccgtacagtatcagaacatcttggggcttagtaaagtggtcggatccggtgttttttgcagtagcaaatggtttctaaaaacctgtcggcttttagattttacgatccctcgagtcttcgacttcttcgatcgtcacggtcctaagtgtcttgcgaccaggtatcagtgggcgcgtgcactttttgagttcgaagttagcgagcgtccctagaagtatccaattgcacctgttgaaaggaggaatatcctcaaattttaggaccttttagccttacccatactcgtggtagaagcattcggtcgtcggttagagttccattagtaataaatcgc"
-	// dna1000_2 := "aagtggggcagtggctcacacccatcatttggtgctaggcaatatatggtgaaaattcggtgcgggaagccaatcttgatgcagtcaactaaggtaaggctggcatgactagaaagcgttgacggcactacgtccatacatgcagccagtcgagataagtacttatacggttaccatctatgaaccagaccggatgtaatccagattaaacgggattgggtctttgctttcacccgggcttggttagagacagcaccctttcctgattacacctcgcataaaaccctagattttaggacactggacggtcttttcgcgatgcttttggtgtgcgccggacaaaggttataaatggtgtctctagtgaaggacggtttagtcgatgccaacgtgtatcaatgtagggcacggccggaggtctcgctggtattgcatttcgggatccgatgaatatcgtacgatagtagtgtccacagaacctttgtgtagttatacgcgctgtggtaccgatggccatagccgtagtggtccgctttgtgtgctgcgctacctgccggccctttaagggaacacgtgtaagccagttaactgagttcctaacccccaagagcatcgctccgatgtgttacgtactctcgtcactccagagatgcacgctcgactagtggtctggcagttatcggcttcgtgaagtatcgcaagtcttgacgttggactttgggtattataaccaatgtcgtgacgatatcgtgtcctagcgggctacctacatgcgggcggtaatatcgcgaatggccgcccacaagagtagaatcagttttcgtgtcctccttggttttcctgcatcgaatgttagctaggctgggacatcaatatatgtttcgcgcgtctttggtagcttccactcatctaaacattatcctggcctactgaaagtaatttccagggaccaccaacgggtccctggccgtattacccagcatcgtttctcccaggtcaa"
-	// dna100_1 := dna1000_1[:100]
-	// dna100_2 := dna1000_2[:100]
+	dna1000_1 := "ggtggttggtcagaaccgtcccgtatgttcataactaggcactagtaccggggccaggacgggagtgcaatagcaagcccttatcaaaaccgtcgcgctaaccacgcaaagatacggtatcacatatgccaagaattggggatgggtattagaatgacctaggtcaacactccttgttagagcgagtggcgtgtgacgtaccacgtcgtacttaactagatcgcttaaagccccgatgtggccacttggaggattcaaaggccctaatgatcctcacacgctaccgaggttgacggcgcttcttgaaaacacaaatttcttggtgacatacgcctacgactcattgtcgtacttttcgtctatcaccaagcgaaacctcccccacttaaccatctatgcgaattgttattcggcaccgccaccgtggaaacccgtcataaaaggaccatgccaaattggtttcatcgacaaagtccattaagttcgatataaacttatttgcagctcgcaagataaaaggctatgtccatgccatgttcggcgcacctctcctcgcgctgtaggacgcaacgttcgttcataatcgagtagtcctgctgcactgatggagccatccattgcagcgtcagcgcttcgactccggcccgctcatcgctagttagctatccgtacagtatcagaacatcttggggcttagtaaagtggtcggatccggtgttttttgcagtagcaaatggtttctaaaaacctgtcggcttttagattttacgatccctcgagtcttcgacttcttcgatcgtcacggtcctaagtgtcttgcgaccaggtatcagtgggcgcgtgcactttttgagttcgaagttagcgagcgtccctagaagtatccaattgcacctgttgaaaggaggaatatcctcaaattttaggaccttttagccttacccatactcgtggtagaagcattcggtcgtcggttagagttccattagtaataaatcgc"
+	dna1000_2 := "aagtggggcagtggctcacacccatcatttggtgctaggcaatatatggtgaaaattcggtgcgggaagccaatcttgatgcagtcaactaaggtaaggctggcatgactagaaagcgttgacggcactacgtccatacatgcagccagtcgagataagtacttatacggttaccatctatgaaccagaccggatgtaatccagattaaacgggattgggtctttgctttcacccgggcttggttagagacagcaccctttcctgattacacctcgcataaaaccctagattttaggacactggacggtcttttcgcgatgcttttggtgtgcgccggacaaaggttataaatggtgtctctagtgaaggacggtttagtcgatgccaacgtgtatcaatgtagggcacggccggaggtctcgctggtattgcatttcgggatccgatgaatatcgtacgatagtagtgtccacagaacctttgtgtagttatacgcgctgtggtaccgatggccatagccgtagtggtccgctttgtgtgctgcgctacctgccggccctttaagggaacacgtgtaagccagttaactgagttcctaacccccaagagcatcgctccgatgtgttacgtactctcgtcactccagagatgcacgctcgactagtggtctggcagttatcggcttcgtgaagtatcgcaagtcttgacgttggactttgggtattataaccaatgtcgtgacgatatcgtgtcctagcgggctacctacatgcgggcggtaatatcgcgaatggccgcccacaagagtagaatcagttttcgtgtcctccttggttttcctgcatcgaatgttagctaggctgggacatcaatatatgtttcgcgcgtctttggtagcttccactcatctaaacattatcctggcctactgaaagtaatttccagggaccaccaacgggtccctggccgtattacccagcatcgtttctcccaggtcaa"
+	dna100_1 := dna1000_1[:100]
+	dna100_2 := dna1000_2[:100]
 
-	// start := time.Now()
-	// fmt.Printf("EditDistance(%s, %s) = %d", dna100_1, dna100_2, EditDistance(dna100_1, dna100_2))
-	// end := time.Now()
-	// fmt.Printf(" in %v\n", end.Sub(start))
+	start := time.Now()
+	fmt.Printf("EditDistance(): n = %d | %d", 100, EditDistance(dna100_1, dna100_2))
+	end := time.Now()
+	fmt.Printf(" in %v\n", end.Sub(start))
 
-	// start = time.Now()
-	// fmt.Printf("EditDistance(%s, %s) = %d", dna1000_1, dna1000_2, EditDistance(dna1000_1, dna1000_2))
-	// end = time.Now()
-	// fmt.Printf(" in %v\n", end.Sub(start))
+	start = time.Now()
+	fmt.Printf("LogiDistance(): n = %d | %d", 100, LogiDistance(dna100_1, dna100_2))
+	end = time.Now()
+	fmt.Printf(" in %v\n", end.Sub(start))
 
-	time.Sleep(5 * time.Second)
-	fmt.Println("done")
+	start = time.Now()
+	fmt.Printf("EditDistance(): n = %d | %d", 1000, EditDistance(dna1000_1, dna1000_2))
+	end = time.Now()
+	fmt.Printf(" in %v\n", end.Sub(start))
+
+	start = time.Now()
+	fmt.Printf("LogiDistance(): n = %d | %d", 1000, LogiDistance(dna1000_1, dna1000_2))
+	end = time.Now()
+	fmt.Printf(" in %v\n", end.Sub(start))
 }
