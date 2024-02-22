@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
 	"time"
 )
-
-var D [][]int = [][]int{}
 
 func Distance(word1 string, word2 string) int {
 	distance := 0
@@ -75,14 +74,13 @@ func EditDistance(word1 string, word2 string) int {
 		D[i] = make([]int, y)
 	}
 
-	x--
-	y--
-
-	if x == 0 && y == 0 {
+	if x <= 0 && y <= 0 {
 		return 0
-	} else if x == 0 || y == 0 {
+	} else if x <= 0 || y <= 0 {
 		return x + y
 	}
+	x--
+	y--
 
 	if word1[x] == word2[y] {
 		if !calc[x-1][y-1] {
@@ -110,8 +108,6 @@ func EditDistance(word1 string, word2 string) int {
 	delete := D[x-1][y]
 
 	return min(insert+1, replace+1, delete+1)
-
-	// return min(EditDistance(word1[:x-1], word2[:y])+1, EditDistance(word1[:x-1], word2[:y-1])+1, EditDistance(word1[:x], word2[:y-1])+1)
 }
 
 func main() {
@@ -147,4 +143,21 @@ func main() {
 	fmt.Printf("LogiDistance(): n = %d | %d", 1000, LogiDistance(dna1000_1, dna1000_2))
 	end = time.Now()
 	fmt.Printf(" in %v\n", end.Sub(start))
+
+	if len(os.Args) == 3 {
+		fmt.Printf("Program arguments %s and %s accepted\n", os.Args[1], os.Args[2])
+		word1 := os.Args[1]
+		word2 := os.Args[2]
+
+		start = time.Now()
+		fmt.Printf("EditDistance(%s, %s) | %d", word1, word2, EditDistance(word1, word2))
+		end = time.Now()
+		fmt.Printf(" in %v\n", end.Sub(start))
+
+		start = time.Now()
+		fmt.Printf("LogiDistance(%s, %s) | %d", word1, word2, LogiDistance(word1, word2))
+		end = time.Now()
+		fmt.Printf(" in %v\n", end.Sub(start))
+	}
+
 }
