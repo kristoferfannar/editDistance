@@ -2,31 +2,39 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"time"
 )
 
-func Distance(word1 string, word2 string) int {
-	distance := 0
-	for i := 0; i < min(len(word1), len(word2)); i++ {
-		if word1[i] != word2[i] {
-			distance++
+func visualizer(D [][]int, word1, word2 string) {
+	for y := range len(word2) + 1 {
+		for x := range len(word1) + 1 {
+			if y == 0 && x == 0 {
+				fmt.Printf("  |")
+			} else if y == 0 {
+				fmt.Printf("%s ", string(word1[x-1]))
+			} else if x == 0 {
+				fmt.Printf("%s |", string(word2[y-1]))
+			} else {
+				fmt.Printf("%d ", D[x][y])
+			}
+			if x == len(word1) {
+				fmt.Println()
+			}
 		}
 	}
-
-	return distance + int(math.Abs(float64(len(word1)-len(word2))))
 }
 
 func calculate(calc [][]bool, D [][]int, x int, y int, word1 string, word2 string) {
-	if x == 0 && y == 0 {
-		D[x][y] = 0
+
+	if x == 0 {
+		D[x][y] = y
 		calc[x][y] = true
 		return
 	}
 
-	if x == 0 || y == 0 {
-		D[x][y] = x + y
+	if y == 0 {
+		D[x][y] = x
 		calc[x][y] = true
 		return
 	}
@@ -66,59 +74,31 @@ func calculate(calc [][]bool, D [][]int, x int, y int, word1 string, word2 strin
 func EditDistance(word1 string, word2 string) int {
 	x := len(word1)
 	y := len(word2)
-	D := make([][]int, x)
-	calc := make([][]bool, x)
-
-	for i := range calc {
-		calc[i] = make([]bool, y)
-		D[i] = make([]int, y)
-	}
 
 	if x <= 0 && y <= 0 {
 		return 0
 	} else if x <= 0 || y <= 0 {
 		return x + y
 	}
-	x--
-	y--
 
-	if word1[x] == word2[y] {
-		if !calc[x-1][y-1] {
-			calculate(calc, D, x-1, y-1, word1, word2)
-		}
-		return D[x-1][y-1]
+	D := make([][]int, x+1)
+	calc := make([][]bool, x+1)
+
+	for i := range calc {
+		calc[i] = make([]bool, y+1)
+		D[i] = make([]int, y+1)
 	}
 
-	insertCalc := calc[x][y-1]
-	if !insertCalc {
-		calculate(calc, D, x, y-1, word1, word2)
-	}
-	insert := D[x][y-1]
+	// visualizer(D, word1, word2)
+	calculate(calc, D, x, y, word1, word2)
 
-	replaceCalc := calc[x-1][y-1]
-	if !replaceCalc {
-		calculate(calc, D, x-1, y-1, word1, word2)
+	if len(word1) <= 50 && len(word2) <= 50 {
+		visualizer(D, word1, word2)
 	}
-	replace := D[x-1][y-1]
-
-	deleteCalc := calc[x-1][y]
-	if !deleteCalc {
-		calculate(calc, D, x-1, y, word1, word2)
-	}
-	delete := D[x-1][y]
-
-	return min(insert+1, replace+1, delete+1)
+	return D[x][y]
 }
 
-func main() {
-	// word1 := "test"
-	// word2 := "trest"
-	// fmt.Printf("Distance(%s, %s) = %d\n", word1, word2, Distance(word1, word2))
-	// fmt.Printf("Distance(%s, %s) = %d\n", word1, word2, Distance(word1, word2))
-
-	// fmt.Printf("EditDistance(%s, %s) = %d\n", word1, word2, EditDistance(word1, word2))
-
-	// // provided by https://www.bioinformatics.org/sms2/random_dna.html
+func tests() {
 	dna1000_1 := "ggtggttggtcagaaccgtcccgtatgttcataactaggcactagtaccggggccaggacgggagtgcaatagcaagcccttatcaaaaccgtcgcgctaaccacgcaaagatacggtatcacatatgccaagaattggggatgggtattagaatgacctaggtcaacactccttgttagagcgagtggcgtgtgacgtaccacgtcgtacttaactagatcgcttaaagccccgatgtggccacttggaggattcaaaggccctaatgatcctcacacgctaccgaggttgacggcgcttcttgaaaacacaaatttcttggtgacatacgcctacgactcattgtcgtacttttcgtctatcaccaagcgaaacctcccccacttaaccatctatgcgaattgttattcggcaccgccaccgtggaaacccgtcataaaaggaccatgccaaattggtttcatcgacaaagtccattaagttcgatataaacttatttgcagctcgcaagataaaaggctatgtccatgccatgttcggcgcacctctcctcgcgctgtaggacgcaacgttcgttcataatcgagtagtcctgctgcactgatggagccatccattgcagcgtcagcgcttcgactccggcccgctcatcgctagttagctatccgtacagtatcagaacatcttggggcttagtaaagtggtcggatccggtgttttttgcagtagcaaatggtttctaaaaacctgtcggcttttagattttacgatccctcgagtcttcgacttcttcgatcgtcacggtcctaagtgtcttgcgaccaggtatcagtgggcgcgtgcactttttgagttcgaagttagcgagcgtccctagaagtatccaattgcacctgttgaaaggaggaatatcctcaaattttaggaccttttagccttacccatactcgtggtagaagcattcggtcgtcggttagagttccattagtaataaatcgc"
 	dna1000_2 := "aagtggggcagtggctcacacccatcatttggtgctaggcaatatatggtgaaaattcggtgcgggaagccaatcttgatgcagtcaactaaggtaaggctggcatgactagaaagcgttgacggcactacgtccatacatgcagccagtcgagataagtacttatacggttaccatctatgaaccagaccggatgtaatccagattaaacgggattgggtctttgctttcacccgggcttggttagagacagcaccctttcctgattacacctcgcataaaaccctagattttaggacactggacggtcttttcgcgatgcttttggtgtgcgccggacaaaggttataaatggtgtctctagtgaaggacggtttagtcgatgccaacgtgtatcaatgtagggcacggccggaggtctcgctggtattgcatttcgggatccgatgaatatcgtacgatagtagtgtccacagaacctttgtgtagttatacgcgctgtggtaccgatggccatagccgtagtggtccgctttgtgtgctgcgctacctgccggccctttaagggaacacgtgtaagccagttaactgagttcctaacccccaagagcatcgctccgatgtgttacgtactctcgtcactccagagatgcacgctcgactagtggtctggcagttatcggcttcgtgaagtatcgcaagtcttgacgttggactttgggtattataaccaatgtcgtgacgatatcgtgtcctagcgggctacctacatgcgggcggtaatatcgcgaatggccgcccacaagagtagaatcagttttcgtgtcctccttggttttcctgcatcgaatgttagctaggctgggacatcaatatatgtttcgcgcgtctttggtagcttccactcatctaaacattatcctggcctactgaaagtaatttccagggaccaccaacgggtccctggccgtattacccagcatcgtttctcccaggtcaa"
 	dna100_1 := dna1000_1[:100]
@@ -144,20 +124,25 @@ func main() {
 	end = time.Now()
 	fmt.Printf(" in %v\n", end.Sub(start))
 
+}
+
+func main() {
 	if len(os.Args) == 3 {
 		fmt.Printf("Program arguments %s and %s accepted\n", os.Args[1], os.Args[2])
 		word1 := os.Args[1]
 		word2 := os.Args[2]
 
-		start = time.Now()
+		start := time.Now()
 		fmt.Printf("EditDistance(%s, %s) | %d", word1, word2, EditDistance(word1, word2))
-		end = time.Now()
+		end := time.Now()
 		fmt.Printf(" in %v\n", end.Sub(start))
 
 		start = time.Now()
 		fmt.Printf("LogiDistance(%s, %s) | %d", word1, word2, LogiDistance(word1, word2))
 		end = time.Now()
 		fmt.Printf(" in %v\n", end.Sub(start))
+	} else {
+		tests()
 	}
 
 }
